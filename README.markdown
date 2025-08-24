@@ -1,4 +1,4 @@
-# ✨ Odoo 18 Installation and Configuration
+# Odoo 18 Installation and Configuration
 
 This repository provides a comprehensive guide for installing and configuring Odoo 18 on an Ubuntu Server 24.04.2 LTS virtual machine using VirtualBox. It includes step-by-step instructions for setting up the server, installing Odoo, configuring advanced features, and troubleshooting common issues.
 
