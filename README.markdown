@@ -1,19 +1,19 @@
-# Odoo 18 Installation and Configuration
+# ✨ Odoo 18 Installation and Configuration
 
-This repository provides a comprehensive guide for installing and configuring Odoo 18 on an Ubuntu Server 24.04.2 LTS virtual machine using VirtualBox, as part of the Software Construction and Development course at FAST – National University of Computer & Emerging Sciences, Islamabad Campus. It includes step-by-step instructions for setting up the server, installing Odoo, configuring advanced features, and troubleshooting common issues.
+This repository provides a comprehensive guide for installing and configuring Odoo 18 on an Ubuntu Server 24.04.2 LTS virtual machine using VirtualBox. It includes step-by-step instructions for setting up the server, installing Odoo, configuring advanced features, and troubleshooting common issues.
 
-## Project Overview
+---
+
+## 🌐 Project Overview
 
 **Objective**: Set up Odoo 18, a business management suite, with a focus on installation, configuration, and customization for small to enterprise-scale deployments. The project covers hardware and software requirements, Ubuntu Server setup, Odoo installation, advanced configurations like custom discounts and reports, and testing of sales modules.
 
-**Course**: Software Construction and Development (Spring 2025)  
-**Instructor**: Mr. Junaid Ali Khan  
-**Submitted by**: Abdullah Daoud (22I-2626)  
-**Institution**: FAST-NUCES, Islamabad Campus
+---
 
-## Hardware and Software Requirements
+## 🛠️ Hardware and Software Requirements
 
 ### Hardware Requirements
+
 - **Small Installations (Up to 5 Users)**:
   - CPU: Dual-core processor
   - RAM: 2 GB
@@ -32,130 +32,147 @@ This repository provides a comprehensive guide for installing and configuring Od
   - Recommendation: Use load balancing and high-availability configurations.
 
 ### Software Requirements
-- **Operating System**: Ubuntu 14.04 LTS or higher (24.04.2 LTS recommended)
-- **Database**: PostgreSQL 9.6 or higher
-- **Python**: Python 3.6 or higher
-- **Additional Packages**: Python dependencies, system libraries (e.g., `libxml2-dev`, `libpq-dev`)
 
-## Installation Steps
+🔹 **Operating System**: Ubuntu 14.04 LTS or higher (24.04.2 LTS recommended)\
+🔹 **Database**: PostgreSQL 9.6 or higher\
+🔹 **Python**: Python 3.6 or higher\
+🔹 **Additional Packages**: Python dependencies, system libraries (e.g., `libxml2-dev`, `libpq-dev`)
+
+---
+
+## 📦 Installation Steps
 
 ### 1. Ubuntu Server Setup
-1. **Download and Install Ubuntu Server**:
-   - Use Ubuntu Server 24.04.2 LTS ISO.
-   - Configure VirtualBox VM with 4 GB RAM, 2 CPU cores, and 40 GB disk space.
-   - Set username and password for the Ubuntu Server.
 
-2. **Update and Upgrade Packages**:
-   ```bash
-   sudo apt-get update
-   sudo apt-get upgrade
-   ```
+- **Download and Install Ubuntu Server**:
+  - Use Ubuntu Server 24.04.2 LTS ISO.
+  - Configure VirtualBox VM with 4 GB RAM, 2 CPU cores, and 40 GB disk space.
+  - Set username and password for the Ubuntu Server.
+- **Update and Upgrade Packages**:
+
+  ```bash
+  sudo apt-get update
+  sudo apt-get upgrade
+  ```
 
 ### 2. Odoo 18 Installation
-1. **Install Dependencies**:
-   ```bash
-   sudo apt-get install -y python3-pip python3-dev libxml2-dev libxslt1-dev zlib1g-dev libsasl2-dev libldap2-dev build-essential libssl-dev libffi-dev libmysqlclient-dev libjpeg-dev libpq-dev libjpeg8-dev liblcms2-dev libblas-dev libatlas-base-dev
-   ```
 
-2. **Install PostgreSQL and Create User**:
-   ```bash
-   sudo apt-get install -y postgresql
-   sudo su - postgres
-   createuser --createdb --username postgres --no-createrole --superuser --pwprompt odoo18
-   exit
-   ```
+- **Install Dependencies**:
 
-3. **Install Git and Clone Odoo 18**:
-   ```bash
-   sudo adduser --system --home=/opt/odoo18 --group odoo18
-   sudo apt-get install -y git
-   sudo su - odoo18 -s /bin/bash
-   git clone https://www.github.com/odoo/odoo --depth 1 --branch master --single-branch .
-   exit
-   ```
+  ```bash
+  sudo apt-get install -y python3-pip python3-dev libxml2-dev libxslt1-dev zlib1g-dev libsasl2-dev libldap2-dev build-essential libssl-dev libffi-dev libmysqlclient-dev libjpeg-dev libpq-dev libjpeg8-dev liblcms2-dev libblas-dev libatlas-base-dev
+  ```
+- **Install PostgreSQL and Create User**:
 
-4. **Set Up Python Virtual Environment**:
-   ```bash
-   sudo apt install -y python3-venv
-   sudo python3 -m venv /opt/odoo18/venv
-   sudo -s
-   cd /opt/odoo18/
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
+  ```bash
+  sudo apt-get install -y postgresql
+  sudo su - postgres
+  createuser --createdb --username postgres --no-createrole --superuser --pwprompt odoo18
+  exit
+  ```
+- **Install Git and Clone Odoo 18**:
 
-5. **Configure Odoo**:
-   - Copy and edit the configuration file:
-     ```bash
-     sudo cp /opt/odoo18/debian/odoo.conf /etc/odoo18.conf
-     sudo nano /etc/odoo18.conf
-     ```
-     Add:
-     ```ini
-     [options]
-     admin_passwd = admin
-     db_host = localhost
-     db_port = 5432
-     db_user = odoo18
-     db_password = 123456
-     addons_path = /opt/odoo18/addons
-     default_productivity_apps = True
-     logfile = /var/log/odoo/odoo18.log
-     ```
-   - Set permissions:
-     ```bash
-     sudo chown odoo18: /etc/odoo18.conf
-     sudo chmod 640 /etc/odoo18.conf
-     sudo mkdir /var/log/odoo
-     sudo chown odoo18:root /var/log/odoo
-     ```
+  ```bash
+  sudo adduser --system --home=/opt/odoo18 --group odoo18
+  sudo apt-get install -y git
+  sudo su - odoo18 -s /bin/bash
+  git clone https://www.github.com/odoo/odoo --depth 1 --branch master --single-branch .
+  exit
+  ```
+- **Set Up Python Virtual Environment**:
 
-6. **Create and Start Odoo Service**:
-   ```bash
-   sudo nano /etc/systemd/system/odoo18.service
-   ```
-   Add:
-   ```ini
-   [Unit]
-   Description=Odoo18
-   After=network.target postgresql.service
-   Documentation=http://www.odoo.com
-   [Service]
-   Type=simple
-   User=odoo18
-   Group=odoo18
-   ExecStart=/opt/odoo18/venv/bin/python3.12 /opt/odoo18/odoo-bin -c /etc/odoo18.conf
-   Restart=always
-   KillMode=mixed
-   TimeoutStopSec=30
-   [Install]
-   WantedBy=multi-user.target
-   ```
-   Set permissions and start:
-   ```bash
-   sudo chmod 755 /etc/systemd/system/odoo18.service
-   sudo chown root: /etc/systemd/system/odoo18.service
-   sudo systemctl start odoo18.service
-   ```
+  ```bash
+  sudo apt install -y python3-venv
+  sudo python3 -m venv /opt/odoo18/venv
+  sudo -s
+  cd /opt/odoo18/
+  source venv/bin/activate
+  pip install -r requirements.txt
+  ```
+- **Configure Odoo**:
+  - Copy and edit the configuration file:
 
-7. **Verify Server IP**:
-   ```bash
-   hostname -I
-   # or
-   ip a
-   ```
+    ```bash
+    sudo cp /opt/odoo18/debian/odoo.conf /etc/odoo18.conf
+    sudo nano /etc/odoo18.conf
+    ```
+
+    Add:
+
+    ```ini
+    [options]
+    admin_passwd = admin
+    db_host = localhost
+    db_port = 5432
+    db_user = odoo18
+    db_password = 123456
+    addons_path = /opt/odoo18/addons
+    default_productivity_apps = True
+    logfile = /var/log/odoo/odoo18.log
+    ```
+  - Set permissions:
+
+    ```bash
+    sudo chown odoo18: /etc/odoo18.conf
+    sudo chmod 640 /etc/odoo18.conf
+    sudo mkdir /var/log/odoo
+    sudo chown odoo18:root /var/log/odoo
+    ```
+- **Create and Start Odoo Service**:
+
+  ```bash
+  sudo nano /etc/systemd/system/odoo18.service
+  ```
+
+  Add:
+
+  ```ini
+  [Unit]
+  Description=Odoo18
+  After=network.target postgresql.service
+  Documentation=http://www.odoo.com
+  [Service]
+  Type=simple
+  User=odoo18
+  Group=odoo18
+  ExecStart=/opt/odoo18/venv/bin/python3.12 /opt/odoo18/odoo-bin -c /etc/odoo18.conf
+  Restart=always
+  KillMode=mixed
+  TimeoutStopSec=30
+  [Install]
+  WantedBy=multi-user.target
+  ```
+
+  Set permissions and start:
+
+  ```bash
+  sudo chmod 755 /etc/systemd/system/odoo18.service
+  sudo chown root: /etc/systemd/system/odoo18.service
+  sudo systemctl start odoo18.service
+  ```
+- **Verify Server IP**:
+
+  ```bash
+  hostname -I
+  # or
+  ip a
+  ```
 
 ### 3. Initial Configuration
+
 - **Create Database**: Access Odoo interface using credentials from `odoo18.conf`.
 - **Log In**: Use the same credentials to log in.
 - **Explore Dashboard**: Install and explore apps like Sales.
 - **Update Settings**: Change password, create users, and configure company details (currency, language, timezone).
 
 ### 4. Advanced Configuration
+
 Enable developer mode in General Settings to perform:
+
 - **Discounts and Promotions**: Enable discounts, online signatures, pricelists, and create custom discount offers.
 - **Custom Pricing Formula**: Define pricing rules for products.
 - **Automated Actions**: Add a Python script for approval workflows:
+
   ```python
   approval_threshold = 5000
   if record.amount_total > approval_threshold:
@@ -163,10 +180,11 @@ Enable developer mode in General Settings to perform:
       manager = env['res.users'].search([('groups_id', '=', env.ref('sales_team.group_sale_manager').id)], limit=1)
       if manager:
           record.write({'user_id': manager.id})
-  else:
-      record.write({'state': 'sale'})
+      else:
+          record.write({'state': 'sale'})
   ```
 - **Custom Reports**: Modify report templates:
+
   ```xml
   <t t-name="sale.report_saleorder_document">
       <t t-call="web.external_layout">
@@ -194,33 +212,42 @@ Enable developer mode in General Settings to perform:
   ```
 
 ### 5. Testing
+
 - Create a customer and a discounted order.
 - Generate an invoice for product sales.
 - View graph reports for sales analytics.
 
-## Troubleshooting
+---
+
+## 🔍 Troubleshooting
 
 ### VirtualBox Issues
+
 - **Black Screen**: Disable 3D acceleration or toggle EFI boot.
 - **Network Issues**: Ensure host internet connectivity; switch between NAT and Bridged adapter.
 - **CPU Error**: Use 64-bit Ubuntu and enable hardware virtualization in BIOS/UEFI.
 - **Slow Performance**: Allocate more RAM/CPU or close host applications.
 - **Guest Additions Failure**:
+
   ```bash
   sudo apt install -y build-essential dkms linux-headers-$(uname -r)
   ```
 
 ### Odoo Issues
+
 - **Service Won’t Start**:
+
   ```bash
   sudo tail -f /var/log/odoo18/odoo18.log
   ```
 - **Database Connection**:
+
   ```bash
   sudo systemctl status postgresql
   sudo -u postgres psql -c "\du"
   ```
 - **Permission Issues**:
+
   ```bash
   ls -la /opt/odoo18/
   ls -la /var/log/odoo18/
@@ -228,7 +255,10 @@ Enable developer mode in General Settings to perform:
   sudo chown -R odoo18:odoo18 /var/log/odoo18/
   ```
 
-## Project Structure
+---
+
+## 📁 Project Structure
+
 ```plaintext
 .
 ├── odoo18/                    # Odoo 18 installation directory
@@ -237,13 +267,10 @@ Enable developer mode in General Settings to perform:
 └── etc/systemd/system/odoo18.service  # Systemd service file
 ```
 
-## Contributing
-Contributions to enhance the setup or documentation are welcome:
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature-branch`).
-3. Commit changes (`git commit -m "Add feature"`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Open a pull request.
+---
 
-## License
-MIT License - see `LICENSE` for details.
+## ⚖️ License
+This project is for **academic and personal skill development purposes only**.  
+Reuse is allowed for **learning and research** with proper credit.
+
+---
