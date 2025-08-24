@@ -247,8 +247,3 @@ Contributions to enhance the setup or documentation are welcome:
 
 ## License
 MIT License - see `LICENSE` for details.
-
-## Contact
-- **Submitted by**: Abdullah Daoud (22I-2626)
-- **Instructor**: Mr. Junaid Ali Khan
-- **Institution**: FAST-NUCES, Islamabad Campus
